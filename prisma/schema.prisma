@@ -13,3 +13,27 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Board {
+  id        Int       @id @default(autoincrement())
+  name      String
+  threads   Thread[]
+  createdAt DateTime  @default(now())
+}
+
+model Thread {
+  id        Int       @id @default(autoincrement())
+  title     String
+  posts     Post[]
+  board     Board     @relation(fields: [boardId], references: [id])
+  boardId   Int
+  createdAt DateTime  @default(now())
+}
+
+model Post {
+  id        Int       @id @default(autoincrement())
+  content   String
+  thread    Thread    @relation(fields: [threadId], references: [id])
+  threadId  Int
+  createdAt DateTime  @default(now())
+}
