@@ -44,3 +44,26 @@ export async function createThread(formData: FormData) {
   // 新しく作成したスレッドの詳細ページにリダイレクトする
   redirect(`/thread/${newThread.id}`);
 }
+
+// 新しいレス（投稿）を作成する関数
+export async function createPost(formData: FormData) {
+  // フォームから必要なデータを取得
+  const content = formData.get("content") as string;
+  const threadId = Number(formData.get("threadId"));
+
+  // 簡単なバリデーション
+  if (!content || !threadId) {
+    return;
+  }
+
+  // データベースに新しいPostを作成
+  await prisma.post.create({
+    data: {
+      content: content,
+      threadId: threadId,
+    },
+  });
+
+  // 該当スレッドページのキャッシュをクリアして、新しい投稿が即時反映されるようにする
+  revalidatePath(`/thread/${threadId}`);
+}
