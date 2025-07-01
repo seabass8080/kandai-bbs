@@ -67,3 +67,25 @@ export async function createPost(formData: FormData) {
   // 該当スレッドページのキャッシュをクリアして、新しい投稿が即時反映されるようにする
   revalidatePath(`/thread/${threadId}`);
 }
+
+// リアクションを追加する関数
+export async function addReaction(formData: FormData) {
+  const postId = Number(formData.get("postId"));
+  const threadId = Number(formData.get("threadId"));
+  const reactionType = formData.get("reactionType") as string;
+
+  if (!postId || !threadId || !reactionType) {
+    return;
+  }
+
+  // Reactionテーブルに新しいレコードを作成する
+  await prisma.reaction.create({
+    data: {
+      type: reactionType,
+      postId: postId,
+    },
+  });
+
+  // ページを再読み込みして、リアクション数を即時反映させる
+  revalidatePath(`/thread/${threadId}`);
+}
