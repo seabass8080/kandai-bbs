@@ -31,9 +31,18 @@ model Thread {
 }
 
 model Post {
-  id        Int       @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   content   String
-  thread    Thread    @relation(fields: [threadId], references: [id])
+  thread    Thread   @relation(fields: [threadId], references: [id])
   threadId  Int
-  createdAt DateTime  @default(now())
+  createdAt DateTime @default(now())
+  reactions Reaction[]
+}
+
+model Reaction {
+  id        Int      @id @default(autoincrement())
+  type      String   // "like", "laugh" などのリアクションの種類を保存
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    Int
+  createdAt DateTime @default(now())
 }

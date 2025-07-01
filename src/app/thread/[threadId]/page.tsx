@@ -13,10 +13,15 @@ export default async function ThreadDetailPage({ params }: ThreadDetailPageProps
     where: {
       id: Number(params.threadId),
     },
+
     include: {
       posts: {
         orderBy: {
           createdAt: "asc",
+        },
+        // 各投稿に紐づくリアクションを全て取得する
+        include: {
+          reactions: true, // `select`を使わず`true`にすることで、Reactionモデルの全フィールドを取得
         },
       },
     },
