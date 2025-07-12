@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
-import BoardSection from "@/components/BoardSection";
 import CreateThreadForm from "@/components/CreateThreadForm";
+import BoardList from "@/components/BoardList";
 
 export const revalidate = 60;
 
@@ -23,11 +23,7 @@ export default async function Home() {
           <CreateThreadForm boards={boards} />
         </div>
 
-        <div className="space-y-8 md:col-span-2">
-          {boards.map((board) => (
-            <BoardSection key={board.id} boardId={board.id} boardName={board.name} />
-          ))}
-        </div>
+        <BoardList boards={boards} />
       </div>
     </main>
   );

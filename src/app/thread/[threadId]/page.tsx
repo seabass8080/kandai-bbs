@@ -19,7 +19,11 @@ export default async function ThreadDetailPage({ params }: ThreadDetailPageProps
           createdAt: "asc",
         },
         include: {
-          reactions: true,
+          reactions: {
+            select: {
+              type: true,
+            },
+          },
         },
       },
     },
@@ -32,7 +36,7 @@ export default async function ThreadDetailPage({ params }: ThreadDetailPageProps
   return (
     <main className="p-4 md:p-8 bg-gray-100 min-h-screen font-sans">
       <header className="mb-6 pb-4 border-b border-gray-300">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-800">{thread.title}</h1>
+        <h1 className="text-3xl font-bold text-gray-800">{thread.title}</h1>
       </header>
 
       <div className="space-y-4">
