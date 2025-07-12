@@ -13,15 +13,13 @@ export default async function ThreadDetailPage({ params }: ThreadDetailPageProps
     where: {
       id: Number(params.threadId),
     },
-
     include: {
       posts: {
         orderBy: {
           createdAt: "asc",
         },
-        // 各投稿に紐づくリアクションを全て取得する
         include: {
-          reactions: true, // `select`を使わず`true`にすることで、Reactionモデルの全フィールドを取得
+          reactions: true,
         },
       },
     },
@@ -34,7 +32,7 @@ export default async function ThreadDetailPage({ params }: ThreadDetailPageProps
   return (
     <main className="p-4 md:p-8 bg-gray-100 min-h-screen font-sans">
       <header className="mb-6 pb-4 border-b border-gray-300">
-        <h1 className="text-3xl font-bold text-gray-800">{thread.title}</h1>
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-800">{thread.title}</h1>
       </header>
 
       <div className="space-y-4">

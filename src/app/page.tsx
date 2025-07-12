@@ -18,12 +18,16 @@ export default async function Home() {
         <p className="text-gray-600 mt-1">関西大学匿名掲示板</p>
       </header>
 
-      <CreateThreadForm boards={boards} />
+      <div className="grid grid-cols-1 md:grid-cols-3 md:gap-8">
+        <div className="md:col-span-1 mb-8 md:mb-0">
+          <CreateThreadForm boards={boards} />
+        </div>
 
-      <div className="space-y-8">
-        {boards.map((board) => (
-          <BoardSection key={board.id} boardId={board.id} boardName={board.name} />
-        ))}
+        <div className="space-y-8 md:col-span-2">
+          {boards.map((board) => (
+            <BoardSection key={board.id} boardId={board.id} boardName={board.name} />
+          ))}
+        </div>
       </div>
     </main>
   );
