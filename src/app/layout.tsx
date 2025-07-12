@@ -1,7 +1,13 @@
 import type { Metadata } from "next";
-// Google FontsからNoto_Sans_JPをインポート
-import { Noto_Sans_JP } from "next/font/google";
+
+import { Inter, Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
 
 const notoSansJP = Noto_Sans_JP({
   subsets: ["latin"],
@@ -22,7 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body className={`${notoSansJP.variable} antialiased`}>{children}</body>
+      <body className={`${inter.variable} ${notoSansJP.variable} antialiased bg-gray-100 font-sans`}>{children}</body>
     </html>
   );
 }
