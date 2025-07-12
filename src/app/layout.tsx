@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-
 import { Inter, Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
+
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -28,7 +29,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body className={`${inter.variable} ${notoSansJP.variable} antialiased bg-gray-100 font-sans`}>{children}</body>
+      <body className={`${inter.variable} ${notoSansJP.variable} antialiased bg-gray-100 font-sans`}>
+        {children}
+
+        <Toaster />
+      </body>
     </html>
   );
 }
