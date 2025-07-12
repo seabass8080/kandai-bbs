@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 async function main() {
   console.log(`Start seeding ...`);
 
-  // 既存のデータをすべて削除する（テストのたびに同じ状態にするため）
+  await prisma.reaction.deleteMany();
   await prisma.post.deleteMany();
   await prisma.thread.deleteMany();
   await prisma.board.deleteMany();
@@ -51,6 +51,7 @@ async function main() {
       { content: "△△先生のマーケティング論はガチ", threadId: thread1.id },
       { content: "それは去年まで。今年から鬼単になったらしいよ", threadId: thread1.id },
       { content: "2023年のものなら持ってます！", threadId: thread2.id },
+      { content: "新歓、めっちゃ楽しかったです！", threadId: thread3.id },
     ],
   });
 
