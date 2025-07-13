@@ -1,7 +1,8 @@
 "use client";
 
 import { createThread } from "@/app/actions";
-import { useFormStatus, useFormState } from "react-dom";
+import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import { useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -33,7 +34,7 @@ interface CreateThreadFormProps {
 export default function CreateThreadForm({ boards }: CreateThreadFormProps) {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
-  const [state, formAction] = useFormState(createThread, initialState);
+  const [state, formAction] = useActionState(createThread, initialState);
 
   useEffect(() => {
     if (state.success && state.newThreadId) {
