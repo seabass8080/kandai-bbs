@@ -2,13 +2,11 @@ import prisma from "@/lib/prisma";
 import CreatePostForm from "@/components/CreatePostForm";
 import PostItem from "@/components/PostItem";
 
-interface ThreadDetailPageProps {
-  params: {
-    threadId: string;
-  };
+interface ThreadPageParams {
+  threadId: string;
 }
 
-export default async function ThreadDetailPage({ params }: ThreadDetailPageProps) {
+export default async function ThreadDetailPage({ params }: { params: { threadId: string } }) {
   const thread = await prisma.thread.findUnique({
     where: {
       id: Number(params.threadId),
