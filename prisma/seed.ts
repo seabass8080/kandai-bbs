@@ -6,6 +6,16 @@ async function main() {
   await prisma.post.deleteMany();
   await prisma.thread.deleteMany();
   await prisma.board.deleteMany();
+
+  await prisma.board.create({
+    data: { name: "授業・楽単情報" },
+  });
+  await prisma.board.create({
+    data: { name: "サークル・部活" },
+  });
+  await prisma.board.create({
+    data: { name: "雑談" },
+  });
 }
 
 main()
