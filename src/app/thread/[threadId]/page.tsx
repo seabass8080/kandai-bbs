@@ -3,9 +3,17 @@ import CreatePostForm from "@/components/CreatePostForm";
 import PostItem from "@/components/PostItem";
 
 export default async function ThreadDetailPage({ params }: { params: { threadId: string } }) {
+  const threadIdString = params.threadId;
+
+  const threadId = Number(threadIdString);
+
+  if (isNaN(threadId)) {
+    return <div>無効なスレッドIDが指定されました。</div>;
+  }
+
   const thread = await prisma.thread.findUnique({
     where: {
-      id: Number(params.threadId),
+      id: threadId,
     },
     include: {
       posts: {
