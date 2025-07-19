@@ -1,9 +1,8 @@
 "use client";
 
 import { createPost } from "@/app/actions";
-import { useActionState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useFormStatus } from "react-dom";
-import { useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 
 function SubmitButton() {
@@ -26,13 +25,19 @@ interface CreatePostFormProps {
 
 export default function CreatePostForm({ threadId }: CreatePostFormProps) {
   const formRef = useRef<HTMLFormElement>(null);
-  const [state, formAction] = useActionState(createPost, initialState);
+  const [state, setState] = useState(initialState);
+
+  const formAction = async (formData: FormData) => {
+    setState({ ...initialState, message: "送信中...", success: false });
+    const result = await createPost(formData);
+    setState(result);
+  };
 
   useEffect(() => {
     if (state.success) {
       toast.success(state.message);
       formRef.current?.reset();
-    } else if (state.message) {
+    } else if (state.message && !state.success) {
       toast.error(state.message);
     }
   }, [state]);

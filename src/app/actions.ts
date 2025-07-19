@@ -3,8 +3,7 @@
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
-// createThread関数
-export async function createThread(prevState: any, formData: FormData): Promise<{ message: string; success: boolean; newThreadId?: number }> {
+export async function createThread(formData: FormData): Promise<{ message: string; success: boolean; newThreadId?: number }> {
   const boardId = Number(formData.get("boardId"));
   const title = formData.get("title") as string;
   const content = formData.get("content") as string;
@@ -42,8 +41,7 @@ export async function createThread(prevState: any, formData: FormData): Promise<
   }
 }
 
-// createPost関数
-export async function createPost(prevState: any, formData: FormData): Promise<{ message: string; success: boolean }> {
+export async function createPost(formData: FormData): Promise<{ message: string; success: boolean }> {
   const content = formData.get("content") as string;
   const threadId = Number(formData.get("threadId"));
 
@@ -70,7 +68,6 @@ export async function createPost(prevState: any, formData: FormData): Promise<{ 
   }
 }
 
-// addReaction関数
 export async function addReaction(formData: FormData) {
   const postId = Number(formData.get("postId"));
   const threadId = Number(formData.get("threadId"));

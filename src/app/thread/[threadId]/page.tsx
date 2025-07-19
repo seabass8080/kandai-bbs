@@ -3,9 +3,7 @@ import CreatePostForm from "@/components/CreatePostForm";
 import PostItem from "@/components/PostItem";
 
 interface PageProps {
-  params: { threadId?: string };
-
-  searchParams?: { [key: string]: string | string[] | undefined };
+  params: { threadId?: string }; // threadId をオプションにする
 }
 
 export default async function ThreadDetailPage({ params }: PageProps) {

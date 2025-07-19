@@ -1,9 +1,9 @@
+// src/components/CreateThreadForm.tsx
 "use client";
 
 import { createThread } from "@/app/actions";
-import { useActionState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useFormStatus } from "react-dom";
-import { useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
@@ -12,11 +12,15 @@ interface Board {
   name: string;
 }
 
+// initialState の newThreadId の型を number | undefined に戻す
 const initialState = {
   message: "",
   success: false,
-  newThreadId: undefined as number | undefined,
+  newThreadId: undefined as number | undefined, // ここを修正：string を削除
 };
+
+// createThread サーバーアクションの戻り値の型を再利用するための型エイリアス
+type CreateThreadResult = Awaited<ReturnType<typeof createThread>>;
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -34,7 +38,14 @@ interface CreateThreadFormProps {
 export default function CreateThreadForm({ boards }: CreateThreadFormProps) {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
-  const [state, formAction] = useActionState(createThread, initialState);
+
+  const [state, setState] = useState<CreateThreadResult>(initialState);
+
+  const formAction = async (formData: FormData) => {
+    setState({ ...initialState, message: "作成中...", success: false });
+    const result = await createThread(formData);
+    setState(result);
+  };
 
   useEffect(() => {
     if (state.success && state.newThreadId) {
@@ -43,7 +54,7 @@ export default function CreateThreadForm({ boards }: CreateThreadFormProps) {
       setTimeout(() => {
         router.push(`/thread/${state.newThreadId}`);
       }, 1500);
-    } else if (state.message) {
+    } else if (state.message && !state.success) {
       toast.error(state.message);
     }
   }, [state, router]);
