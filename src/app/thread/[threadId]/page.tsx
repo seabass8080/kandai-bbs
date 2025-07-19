@@ -3,16 +3,22 @@ import CreatePostForm from "@/components/CreatePostForm";
 import PostItem from "@/components/PostItem";
 
 interface PageProps {
-  params: { threadId: string };
+  params: { threadId?: string };
+
+  searchParams?: { [key: string]: string | string[] | undefined };
 }
 
 export default async function ThreadDetailPage({ params }: PageProps) {
-  const threadIdString: string = params.threadId;
+  const threadIdString = params.threadId;
+
+  if (!threadIdString || typeof threadIdString !== "string" || threadIdString.trim().length === 0) {
+    return <div>スレッドIDが正しく指定されていません。</div>;
+  }
 
   const threadId = Number(threadIdString);
 
   if (isNaN(threadId)) {
-    return <div>無効なスレッドIDです。</div>;
+    return <div>無効なスレッドIDが指定されました。</div>;
   }
 
   const thread = await prisma.thread.findUnique({
