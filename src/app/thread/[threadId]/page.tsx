@@ -2,13 +2,17 @@ import prisma from "@/lib/prisma";
 import CreatePostForm from "@/components/CreatePostForm";
 import PostItem from "@/components/PostItem";
 
-export default async function ThreadDetailPage({ params }: { params: { threadId: string } }) {
-  const threadIdString = params.threadId;
+interface PageProps {
+  params: { threadId: string };
+}
+
+export default async function ThreadDetailPage({ params }: PageProps) {
+  const threadIdString: string = params.threadId;
 
   const threadId = Number(threadIdString);
 
   if (isNaN(threadId)) {
-    return <div>無効なスレッドIDが指定されました。</div>;
+    return <div>無効なスレッドIDです。</div>;
   }
 
   const thread = await prisma.thread.findUnique({
