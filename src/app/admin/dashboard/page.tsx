@@ -50,9 +50,7 @@ export default async function AdminDashboardPage() {
                 {board.threads.map((thread) => (
                   <li key={thread.id} className="py-4">
                     <div className="flex justify-between items-center mb-2">
-                      <h3 className="text-xl font-medium text-blue-700">
-                        スレッド: {thread.title} ({thread.id})
-                      </h3>
+                      <h3 className="text-xl font-medium text-blue-700">スレッド: {thread.title}</h3>
                       <form action={deleteThread}>
                         <input type="hidden" name="threadId" value={thread.id} />
                         <button type="submit" className="bg-red-400 hover:bg-red-500 text-white text-sm py-1 px-3 rounded">
@@ -67,7 +65,7 @@ export default async function AdminDashboardPage() {
                         {thread.posts.map((post) => (
                           <li key={post.id} className="bg-gray-50 p-3 rounded flex justify-between items-center">
                             <div className="text-gray-700 text-sm">
-                              {post.content.substring(0, 50)}... ({post.id})
+                              {post.content.substring(0, 50)}...
                               <div className="text-xs text-gray-500 mt-1">
                                 投稿日時: {new Date(post.createdAt).toLocaleString()} | リアクション: {post.reactions.length}
                               </div>
