@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { logoutAdmin, checkAdminAuth } from "@/lib/auth";
 
 export async function createThread(formData: FormData): Promise<{ message: string; success: boolean; newThreadId?: number }> {
   const boardId = Number(formData.get("boardId"));
@@ -85,4 +86,88 @@ export async function addReaction(formData: FormData) {
   });
 
   revalidatePath(`/thread/${threadId}`);
+}
+
+export async function logout() {
+  await logoutAdmin();
+}
+
+export async function deleteThread(formData: FormData) {
+  const isAdmin = await checkAdminAuth();
+  if (!isAdmin) {
+    console.error("Unauthorized attempt to delete thread.");
+    return { message: "認証されていません。", success: false };
+  }
+
+  const threadId = Number(formData.get("threadId"));
+
+  if (isNaN(threadId)) {
+    return { message: "無効なスレッドIDです。", success: false };
+  }
+
+  try {
+    await prisma.reaction.deleteMany({
+      where: {
+        post: {
+          threadId: threadId,
+        },
+      },
+    });
+    await prisma.post.deleteMany({
+      where: {
+        threadId: threadId,
+      },
+    });
+    await prisma.thread.delete({
+      where: { id: threadId },
+    });
+
+    revalidatePath("/");
+    revalidatePath("/admin/dashboard");
+    revalidatePath(`/thread/${threadId}`);
+    return { message: "スレッドを削除しました。", success: true };
+  } catch (error) {
+    console.error("Failed to delete thread:", error);
+    return { message: "スレッドの削除に失敗しました。", success: false };
+  }
+}
+
+export async function deletePost(formData: FormData) {
+  const isAdmin = await checkAdminAuth();
+  if (!isAdmin) {
+    console.error("Unauthorized attempt to delete post.");
+    return { message: "認証されていません。", success: false };
+  }
+
+  const postId = Number(formData.get("postId"));
+
+  if (isNaN(postId)) {
+    return { message: "無効な投稿IDです。", success: false };
+  }
+
+  try {
+    const post = await prisma.post.findUnique({
+      where: { id: postId },
+      select: { threadId: true },
+    });
+
+    if (!post) {
+      return { message: "投稿が見つかりません。", success: false };
+    }
+
+    await prisma.reaction.deleteMany({
+      where: { postId: postId },
+    });
+    await prisma.post.delete({
+      where: { id: postId },
+    });
+
+    revalidatePath("/");
+    revalidatePath("/admin/dashboard");
+    revalidatePath(`/thread/${post.threadId}`);
+    return { message: "投稿を削除しました。", success: true };
+  } catch (error) {
+    console.error("Failed to delete post:", error);
+    return { message: "投稿の削除に失敗しました。", success: false };
+  }
 }
